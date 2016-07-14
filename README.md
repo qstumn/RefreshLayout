@@ -45,7 +45,7 @@ this is a custom layout with refresh and loadmore function for android
             }
         });
 
-  if you If you want to custom header or footer view, create your view and extends QLoadView like this
+  If you want to custom header or footer view, create your view and extends QLoadView like this
   
   `public class HeaderView extends QLoadView`
   
