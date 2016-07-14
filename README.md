@@ -4,10 +4,10 @@ this is a custom layout with refresh and loadmore function for android
 
 ![Alt text](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
-#####1.gradle
+####1.gradle
     compile 'q.rorbin:QRefreshLayout:1.0.1'  
 
-#####2.xml
+####2.xml
 
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
@@ -22,7 +22,7 @@ this is a custom layout with refresh and loadmore function for android
     </q.rorbin.qrefreshlayout.QRefreshLayout>
     
 
-#####3.code
+####3.code
   
    if you want loadmore, call this funcation
   
