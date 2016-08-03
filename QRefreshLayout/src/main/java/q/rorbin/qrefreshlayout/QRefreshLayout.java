@@ -367,7 +367,7 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
     /**
      * @param style Use one of {@link #STYLE_CLASSIC},{@link #STYLE_GOOGLE}
      */
-    public void setRefreshStyle(@IntRange(from = STYLE_CLASSIC, to = STYLE_GOOGLE) int style) {
+    public void setRefreshStyle(int style) {
         if (style != STYLE_CLASSIC && style != STYLE_GOOGLE)
             throw new IllegalStateException("not support style");
         mStyle = style;
