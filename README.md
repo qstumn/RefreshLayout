@@ -1,4 +1,7 @@
 # QRefreshLayout
+[中文版](https://github.com/qstumn/QRefreshLayout/blob/master/READMEC.md)
+
+
 this is a custom layout with refresh and loadmore function for android
 
 
