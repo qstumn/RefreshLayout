@@ -4,10 +4,10 @@
 
 ![Alt text](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
-####1.gradle
+###1. gradle
     compile 'q.rorbin:QRefreshLayout:1.0.1'  
 
-####2.xml
+###2. xml
 
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
@@ -22,9 +22,9 @@
     </q.rorbin.qrefreshlayout.QRefreshLayout>
     
 
-####3.code
+###3. code
   
-   如果需要上拉下载更多功能，请调用以下方法
+   如果需要上拉加载更多功能，请调用以下方法
   
   `mRefreshLayout.setLoadMoreEnable(true);`
 
