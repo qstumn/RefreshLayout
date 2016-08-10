@@ -6,13 +6,11 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
-import android.support.annotation.IntRange;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingParent;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,8 +22,8 @@ import android.widget.ScrollView;
  * @author chqiu
  *         Email:qstumn@163.com
  */
-public class QRefreshLayout extends FrameLayout implements NestedScrollingParent,
-        NestedScrollingChild {
+public class QRefreshLayout extends FrameLayout {
+    private static final String TAG = "qch";
     private RefreshHandler mHandler;
 
     private int mFinalHeight = QRefreshUtil.dp2px(getContext(), 50);
@@ -85,6 +83,9 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        if (getChildCount() > 1) {
+            throw new IllegalStateException("QRefreshLayout can only have one child");
+        }
         mTarget = getChildAt(0);
         if (mHeaderView == null) {
             createDefaultHeaderView();
@@ -96,6 +97,7 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
 
 
     public void setHeaderView(QLoadView view) {
+        if (view == mHeaderView) return;
         if (mHeaderView != null) removeView(mHeaderView);
         mHeaderView = view;
         LayoutParams headerParams = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
@@ -104,6 +106,7 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
 
 
     public void setFooterView(QLoadView view) {
+        if (view == mFooterView) return;
         if (mFooterView != null) removeView(mFooterView);
         mFooterView = view;
         LayoutParams footerParams = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
@@ -134,6 +137,7 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
+                Log.i(TAG, "mAction: " + mAction);
                 float currY = event.getY();
                 float dy = currY - mTouchY;
                 mTouchY = currY;
@@ -163,6 +167,14 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
         }
     }
 
+    private void onRefreshPointerUp() {
+        if (!mRefreshing) onPointerUp(mHeaderView);
+    }
+
+    private void onLoadPointUp() {
+        if (!mLoading) onPointerUp(mFooterView);
+    }
+
     private void onPointerUp(QLoadView view) {
         int state = -1;
         int height = view.getHeight();
@@ -177,13 +189,6 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
         syncLoadViewState(view, state);
     }
 
-    private void onRefreshPointerUp() {
-        if (!mRefreshing) onPointerUp(mHeaderView);
-    }
-
-    private void onLoadPointUp() {
-        if (!mLoading) onPointerUp(mFooterView);
-    }
 
     private void startPullAnime(final View view, int newHeight, Animator.AnimatorListener listener) {
         ValueAnimator anime = ValueAnimator.ofInt(view.getHeight(), newHeight);
@@ -206,10 +211,11 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
     }
 
     private void handleScroll(float dy) {
-        mAction = true;
         if (mMode == MODE_REFRESH) {
+            mAction = true;
             handleHeaderScroll(dy);
         } else if (mMode == MODE_LOADMORE) {
+            mAction = true;
             handleFooterScroll(dy);
         }
     }
@@ -387,12 +393,17 @@ public class QRefreshLayout extends FrameLayout implements NestedScrollingParent
     }
 
     private void handleTargetBottom() {
-        if (mTarget instanceof AbsListView) {
-            ((AbsListView) mTarget).setSelection(((AbsListView) mTarget).getChildCount() - 1);
-        } else if (mTarget instanceof RecyclerView) {
-            ((RecyclerView) mTarget).scrollToPosition(((RecyclerView) mTarget).getChildCount() - 1);
-        } else if (mTarget instanceof ScrollView) {
-            ((ScrollView) mTarget).fullScroll(View.FOCUS_DOWN);
-        }
+        mTarget.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mTarget instanceof AbsListView) {
+                    ((AbsListView) mTarget).setSelection(((AbsListView) mTarget).getChildCount() - 1);
+                } else if (mTarget instanceof RecyclerView) {
+                    ((RecyclerView) mTarget).scrollToPosition(((RecyclerView) mTarget).getChildCount() - 1);
+                } else if (mTarget instanceof ScrollView) {
+                    ((ScrollView) mTarget).fullScroll(View.FOCUS_DOWN);
+                }
+            }
+        });
     }
 }
