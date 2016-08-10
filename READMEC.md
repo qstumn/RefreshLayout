@@ -1,11 +1,16 @@
 # QRefreshLayout
 一个上拉刷新下拉加载更多的Android自定义布局
 
+2016.8.10 更新
 
-![Alt text](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
+    1. 修复了某些情况下无法触发下拉刷新的BUG
+    2. 修复了RecyclerView上拉加载后没有滚动到底部的BUG
+
+
+![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
 ###1. gradle
-    compile 'q.rorbin:QRefreshLayout:1.0.1'  
+    compile 'q.rorbin:QRefreshLayout:1.1.0'  
 
 ###2. xml
 
