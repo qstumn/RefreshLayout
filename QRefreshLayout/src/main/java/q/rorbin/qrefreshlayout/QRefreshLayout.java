@@ -23,7 +23,6 @@ import android.widget.ScrollView;
  *         Email:qstumn@163.com
  */
 public class QRefreshLayout extends FrameLayout {
-    private static final String TAG = "qch";
     private RefreshHandler mHandler;
 
     private int mFinalHeight = QRefreshUtil.dp2px(getContext(), 50);
@@ -137,7 +136,6 @@ public class QRefreshLayout extends FrameLayout {
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
-                Log.i(TAG, "mAction: " + mAction);
                 float currY = event.getY();
                 float dy = currY - mTouchY;
                 mTouchY = currY;
@@ -397,9 +395,9 @@ public class QRefreshLayout extends FrameLayout {
             @Override
             public void run() {
                 if (mTarget instanceof AbsListView) {
-                    ((AbsListView) mTarget).setSelection(((AbsListView) mTarget).getChildCount() - 1);
+                    ((AbsListView) mTarget).setSelection(((AbsListView) mTarget).getAdapter().getCount() - 1);
                 } else if (mTarget instanceof RecyclerView) {
-                    ((RecyclerView) mTarget).scrollToPosition(((RecyclerView) mTarget).getChildCount() - 1);
+                    ((RecyclerView) mTarget).scrollToPosition(((RecyclerView) mTarget).getAdapter().getItemCount() - 1);
                 } else if (mTarget instanceof ScrollView) {
                     ((ScrollView) mTarget).fullScroll(View.FOCUS_DOWN);
                 }
