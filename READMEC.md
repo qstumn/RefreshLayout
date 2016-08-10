@@ -1,16 +1,13 @@
 # QRefreshLayout
-[中文版](https://github.com/qstumn/QRefreshLayout/blob/master/READMEC.md)
-
-
-this is a custom layout with refresh and loadmore function for android
+一个上拉刷新下拉加载更多的Android自定义布局
 
 
 ![Alt text](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
-####1.gradle
+###1. gradle
     compile 'q.rorbin:QRefreshLayout:1.0.1'  
 
-####2.xml
+###2. xml
 
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
@@ -25,13 +22,13 @@ this is a custom layout with refresh and loadmore function for android
     </q.rorbin.qrefreshlayout.QRefreshLayout>
     
 
-####3.code
+###3. code
   
-   if you want loadmore, call this funcation
+   如果需要上拉加载更多功能，请调用以下方法
   
   `mRefreshLayout.setLoadMoreEnable(true);`
 
-   then 
+   设置监听 
   
     mRefreshLayout.setRefreshHandler(new RefreshHandler() {
     
@@ -48,10 +45,11 @@ this is a custom layout with refresh and loadmore function for android
             }
         });
 
-  If you want to custom header or footer view, create your view and extends QLoadView like this
+  如果你想自定义自己的头部或者尾部的View，只需要将你的View继承自QLoadView即可
   
   `public class HeaderView extends QLoadView`
   
-  then
+   然后在设置进布局
   
   `mRefreshLayout.setHeaderView(new HeaderView());`
+
