@@ -4,11 +4,16 @@
 
 this is a custom layout with refresh and loadmore function for android
 
+##Change Log
+    V1.1.0(2016.8.10) 
+    1. 修复了某些情况下无法触发下拉刷新的BUG
+    2. 修复了内部为RecyclerView时，上拉加载后没有滚动到底部的BUG
 
-![Alt text](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
+
+![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
 ####1.gradle
-    compile 'q.rorbin:QRefreshLayout:1.0.1'  
+    compile 'q.rorbin:QRefreshLayout:1.1.0'  
 
 ####2.xml
 
