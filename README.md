@@ -16,7 +16,7 @@
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
 ###1. gradle
-    compile 'q.rorbin:QRefreshLayout:1.1.1'  
+    compile 'q.rorbin:QRefreshLayout:1.1.3'  
 
 ###2. xml
 
