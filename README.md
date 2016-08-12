@@ -65,7 +65,7 @@
   `mRefreshLayout.setHeaderView(new HeaderView());`
  
  
- ###4. 属性说明
+###4. 属性说明
  
  xml | code | 说明
  --- | --- | ---
