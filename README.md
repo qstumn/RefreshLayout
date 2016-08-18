@@ -71,3 +71,6 @@
  --- | --- | ---
  app:refreshStyle | setRefreshStyle | 设置刷新风格
 
+
+#LICENSE
+###[see](https://github.com/qstumn/RefreshLayout/blob/master/LICENSE)
