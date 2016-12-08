@@ -1,21 +1,24 @@
 # QRefreshLayout
-[中文版](https://github.com/qstumn/QRefreshLayout/blob/master/READMEC.md)
-
-
-this is a custom layout with refresh and loadmore function for android
+一个上拉刷新下拉加载更多的Android自定义布局
 
 ##Change Log
-    V1.1.1(2016.8.10) 
+    v1.1.3
+    1. 新增了google抽屉式刷新加载风格
+
+    v1.1.1
+    1. 修复了内部为RecyclerView时，上拉加载会滚动到底部的BUG
+
+    v1.1.0
     1. 修复了某些情况下无法触发下拉刷新的BUG
-    2. 修复了内部为RecyclerView时，上拉加载后没有滚动到底部的BUG
+    
 
 
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
-####1.gradle
-    compile 'q.rorbin:QRefreshLayout:1.1.1'  
+###1. gradle
+    compile 'q.rorbin:QRefreshLayout:1.1.3'  
 
-####2.xml
+###2. xml
 
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
@@ -30,13 +33,13 @@ this is a custom layout with refresh and loadmore function for android
     </q.rorbin.qrefreshlayout.QRefreshLayout>
     
 
-####3.code
+###3. code
   
-   if you want loadmore, call this funcation
+   如果需要上拉加载更多功能，请调用以下方法
   
   `mRefreshLayout.setLoadMoreEnable(true);`
 
-   then 
+   设置监听 
   
     mRefreshLayout.setRefreshHandler(new RefreshHandler() {
     
@@ -53,10 +56,35 @@ this is a custom layout with refresh and loadmore function for android
             }
         });
 
-  If you want to custom header or footer view, create your view and extends QLoadView like this
+  如果你想自定义自己的头部或者尾部的View，只需要将你的View继承自QLoadView即可
   
   `public class HeaderView extends QLoadView`
   
-  then
+   然后在设置进布局
   
   `mRefreshLayout.setHeaderView(new HeaderView());`
+ 
+ 
+###4. 属性说明
+ 
+ xml | code | 说明
+ --- | --- | ---
+ app:refreshStyle | setRefreshStyle | 设置刷新风格
+
+
+#LICENSE
+```
+Copyright 2016, RorbinQiu
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
