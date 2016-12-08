@@ -60,7 +60,7 @@
   public class CustomView extends QLoadView
 ```
   
-   然后在设置进布局
+   然后再设置进布局
   
 ```
   mRefreshLayout.setHeaderView(new CustomView());
