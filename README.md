@@ -2,19 +2,21 @@
 一个上拉刷新下拉加载更多的Android自定义布局
 
 ##Change Log
-    
-
+ ```
     v1.2.0
     1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
     2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
+```
     
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
+
 ##how to use:
 ###1. gradle
+```
     compile 'q.rorbin:QRefreshLayout:1.2.0'  
-
+```
 ###2. xml
-
+```
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
         android:layout_width="match_parent"
@@ -26,16 +28,17 @@
             android:layout_height="match_parent"/>
             
     </q.rorbin.qrefreshlayout.QRefreshLayout>
-    
+    ```
 
 ###3. code
   
    如果需要上拉加载更多功能，请调用以下方法
-  
-  `mRefreshLayout.setLoadMoreEnable(true);`
+  ```
+  mRefreshLayout.setLoadMoreEnable(true);
+```
 
    设置监听 
-  
+  ```
     mRefreshLayout.setRefreshHandler(new RefreshHandler() {
     
             @Override
@@ -50,15 +53,19 @@
                 mRefreshLayout.LoadMoreComplete();
             }
         });
-
+```
   如果你想自定义头部或者尾部的View，只需要将你的View继承自QLoadView即可
   
-  `public class CustomView extends QLoadView`
+```
+  public class CustomView extends QLoadView
+```
   
    然后在设置进布局
   
-  `mRefreshLayout.setHeaderView(new CustomView());`
-  `mRefreshLayout.setFooterView(new CustomView());`
+```
+  mRefreshLayout.setHeaderView(new CustomView());
+  mRefreshLayout.setFooterView(new CustomView());
+```
   
    QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MateriaBlackHeaderView(MateriaBlackFooterView)，QRefreshLayout默认设置为HeaderView
  
