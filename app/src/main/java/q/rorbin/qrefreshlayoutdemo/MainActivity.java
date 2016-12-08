@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import q.rorbin.qrefreshlayout.QRefreshLayout;
-import q.rorbin.qrefreshlayout.RefreshHandler;
+import q.rorbin.qrefreshlayout.listener.RefreshHandler;
 
 public class MainActivity extends AppCompatActivity {
     private ListView mListView;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                         mAdapter.notifyDataSetChanged();
                         mRefreshLayout.refreshComplete();
                     }
-                },2000);
+                }, 5000);
             }
 
             @Override
@@ -59,9 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         mDatas.addLast("上拉增加的数据");
                         mAdapter.notifyDataSetChanged();
-                        mRefreshLayout.LoadMoreComplete();
+                        mRefreshLayout.loadMoreComplete();
                     }
-                },2000);
+                }, 5000);
             }
         });
     }
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     public void getData() {
         mDatas = new LinkedList<>();
         Collections.addAll(mDatas, "第1条数据", "第2条数据", "第3条数据",
-                "第4条数据", "第5条数据", "第6条数据", "第7条数据", "第8条数据"
-                , "第9条数据", "第10条数据", "第11条数据", "第12条数据", "第13条数据");
+                "第4条数据","第7条数据","第8条数据","第9条数据","第10条数据");
     }
 }

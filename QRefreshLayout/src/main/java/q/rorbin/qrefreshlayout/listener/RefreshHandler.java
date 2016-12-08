@@ -1,4 +1,6 @@
-package q.rorbin.qrefreshlayout;
+package q.rorbin.qrefreshlayout.listener;
+
+import q.rorbin.qrefreshlayout.QRefreshLayout;
 
 /**
  * @author chqiu

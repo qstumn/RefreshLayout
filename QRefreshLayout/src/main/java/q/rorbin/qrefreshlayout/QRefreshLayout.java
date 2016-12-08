@@ -1,22 +1,25 @@
 package q.rorbin.qrefreshlayout;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.support.annotation.FloatRange;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.Gravity;
+
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
-import android.widget.ScrollView;
+
+import q.rorbin.qrefreshlayout.listener.RefreshHandler;
+import q.rorbin.qrefreshlayout.widget.QLoadView;
+import q.rorbin.qrefreshlayout.widget.classics.FooterView;
+import q.rorbin.qrefreshlayout.widget.classics.HeaderView;
+import q.rorbin.qrefreshlayout.widget.material.MaterialBlackFooterView;
+import q.rorbin.qrefreshlayout.widget.material.MaterialBlackHeaderView;
+import q.rorbin.qrefreshlayout.widget.material.MaterialHeaderView;
 
 /**
  * @author chqiu
@@ -24,41 +27,19 @@ import android.widget.ScrollView;
  */
 public class QRefreshLayout extends FrameLayout {
     private RefreshHandler mHandler;
-
-    private int mFinalHeight = QRefreshUtil.dp2px(getContext(), 50);
-
-    private int mRefreshHeight = (int) (mFinalHeight * 1.3d);
-
     private QLoadView mHeaderView;
     private QLoadView mFooterView;
     private View mTarget;
-
-    private double mDragIndex = 1f;
-
-    private final double mRatio = 400d;
-
-    private int mAnimeDuration = 300;
-
-    private boolean mRefreshing = false;
-
-    private boolean mLoading = false;
-
-    private boolean mAction = false;
-
-    private boolean mLoadMoreEnable = false;
-
+    private float mResistance;
+    private boolean mHeaderPulling;
+    private boolean mFooterPulling;
+    private boolean mLoadMoreEnable;
     private float mTouchY;
-
-    private int mMode = -1;
-
-    private final int MODE_REFRESH = 0;
-
-    private final int MODE_LOADMORE = 1;
-
-    public static final int STYLE_CLASSIC = 2;
-    public static final int STYLE_GOOGLE = 3;
-
-    private int mStyle = STYLE_CLASSIC;
+    private int mMovedDisY;
+    private float mRefreshDis;
+    private int mMode;
+    private final int MODE_REFRESH = 1;
+    private final int MODE_LOADMORE = 2;
 
     public QRefreshLayout(Context context) {
         this(context, null);
@@ -75,7 +56,8 @@ public class QRefreshLayout extends FrameLayout {
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.QRefreshLayout);
-        mStyle = typedArray.getInteger(R.styleable.QRefreshLayout_refreshStyle, STYLE_CLASSIC);
+        float resistance = typedArray.getFloat(R.styleable.QRefreshLayout_resistance, 0.6f);
+        setResistance(resistance);
         typedArray.recycle();
     }
 
@@ -87,66 +69,54 @@ public class QRefreshLayout extends FrameLayout {
         }
         mTarget = getChildAt(0);
         if (mHeaderView == null) {
-            createDefaultHeaderView();
+            setHeaderView(new HeaderView(getContext()));
         }
         if (mFooterView == null) {
-            createDefaultFooterView();
+            setFooterView(new FooterView(getContext()));
         }
     }
 
 
     public void setHeaderView(QLoadView view) {
-        if (view == mHeaderView) return;
-        if (mHeaderView != null) removeView(mHeaderView);
+        addLoadView(view, mHeaderView);
         mHeaderView = view;
-        LayoutParams headerParams = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-        addView(mHeaderView, headerParams);
     }
 
 
     public void setFooterView(QLoadView view) {
-        if (view == mFooterView) return;
-        if (mFooterView != null) removeView(mFooterView);
+        addLoadView(view, mFooterView);
         mFooterView = view;
-        LayoutParams footerParams = new LayoutParams(LayoutParams.MATCH_PARENT, 0);
-        footerParams.gravity = Gravity.BOTTOM;
-        addView(mFooterView, footerParams);
     }
 
-
-    public void setRefreshingHeight(int height) {
-        mFinalHeight = height;
-        mRefreshHeight = (int) (mFinalHeight * 1.3d);
+    private void addLoadView(QLoadView newView, QLoadView oldView) {
+        if (newView == oldView) return;
+        if (oldView != null) removeView(oldView);
+        newView.addToRefreshLayout(this);
     }
-
-    private void createDefaultHeaderView() {
-        setHeaderView(new HeaderView(getContext()));
-    }
-
-    private void createDefaultFooterView() {
-        setFooterView(new FooterView(getContext()));
-    }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (MotionEventCompat.getActionMasked(event)) {
             case MotionEvent.ACTION_DOWN: {
                 mTouchY = event.getY();
+                mMovedDisY = 0;
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
                 float currY = event.getY();
                 float dy = currY - mTouchY;
                 mTouchY = currY;
-                if (dy > 0 && !canTargetScrollUp() && !mAction) {
+                if (dy > 0 && !canTargetScrollUp() && !mFooterPulling) {
                     mMode = MODE_REFRESH;
-                } else if (dy < 0 && mLoadMoreEnable && !canTargetScrollDown() && !mAction) {
+                } else if (dy < 0 && mLoadMoreEnable && !canTargetScrollDown() && !mHeaderPulling) {
                     mMode = MODE_LOADMORE;
                 }
                 handleScroll(dy);
-                if (mStyle == STYLE_GOOGLE && (mHeaderView.getHeight() != 0 || mFooterView.getHeight() != 0))
+                if (mMode == MODE_REFRESH && mHeaderPulling) {
                     return true;
+                } else if (mMode == MODE_LOADMORE && mFooterPulling) {
+                    return true;
+                }
                 break;
             }
             case MotionEvent.ACTION_UP: {
@@ -155,6 +125,12 @@ public class QRefreshLayout extends FrameLayout {
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        mRefreshDis = h / 6;
     }
 
     private void onPointerUp() {
@@ -166,144 +142,100 @@ public class QRefreshLayout extends FrameLayout {
     }
 
     private void onRefreshPointerUp() {
-        if (!mRefreshing) onPointerUp(mHeaderView);
+        if (mHeaderView.getState() != QLoadView.STATE.REFRESH) {
+            onPointerUp(mHeaderView);
+        }
     }
 
     private void onLoadPointUp() {
-        if (!mLoading) onPointerUp(mFooterView);
+        if (mFooterView.getState() != QLoadView.STATE.REFRESH) {
+            onPointerUp(mFooterView);
+        }
     }
 
     private void onPointerUp(QLoadView view) {
-        int state = -1;
-        int height = view.getHeight();
-        if (height > mRefreshHeight) {
-            height = mFinalHeight;
-            state = QLoadView.STATE_REFRESH;
-        } else if (height < mRefreshHeight) {
-            height = 0;
-            state = QLoadView.STATE_NORMAL;
-        }
-        startPullAnime(view, height, null);
-        syncLoadViewState(view, state);
-    }
-
-
-    private void startPullAnime(final View view, int newHeight, Animator.AnimatorListener listener) {
-        ValueAnimator anime = ValueAnimator.ofInt(view.getHeight(), newHeight);
-        anime.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int h = Integer.parseInt(animation.getAnimatedValue().toString());
-                LayoutParams params = (LayoutParams) view.getLayoutParams();
-                params.height = h;
-                view.setLayoutParams(params);
-                if (view.equals(mHeaderView)) handleTargetHeight(h);
-                else if (view.equals(mFooterView)) handleTargetHeight(-h);
-
+        if (mMovedDisY >= mRefreshDis && view.getState() != QLoadView.STATE.REFRESH) {
+            view.setState(QLoadView.STATE.REFRESH);
+            view.onRefreshBegin(mTarget);
+            if (mHandler != null) {
+                if (view.equals(mHeaderView)) {
+                    mHandler.onRefresh(this);
+                } else if (view.equals(mFooterView)) {
+                    mHandler.onLoadMore(this);
+                }
             }
-        });
-        if (listener != null)
-            anime.addListener(listener);
-        anime.setDuration(mAnimeDuration);
-        anime.start();
+        } else if (mMovedDisY < mRefreshDis) {
+            view.onPrepare(mTarget);
+            if (view.equals(mHeaderView)) {
+                mHeaderPulling = false;
+            } else if (view.equals(mFooterView)) {
+                mFooterPulling = false;
+            }
+        }
     }
+
 
     private void handleScroll(float dy) {
         if (mMode == MODE_REFRESH) {
-            mAction = true;
             handleHeaderScroll(dy);
         } else if (mMode == MODE_LOADMORE) {
-            mAction = true;
             handleFooterScroll(dy);
         }
     }
 
-
     private void handleHeaderScroll(float dy) {
-        LayoutParams params = (LayoutParams) mHeaderView.getLayoutParams();
         if (!canTargetScrollUp() && dy > 0) {
-            if (mRefreshing) {
-                params.height += dy;
-                if (params.height > mFinalHeight) params.height = mFinalHeight;
-            } else {
-                mDragIndex = Math.exp(-(params.height / mRatio));
-                if (mDragIndex < 0) mDragIndex = 0;
-                params.height += dy * mDragIndex;
-                if (params.height > mRefreshHeight) {
-                    syncLoadViewState(mHeaderView, QLoadView.STATE_PULLING);
-                }
+            mHeaderPulling = true;
+            double dragIndex = Math.exp(-(mMovedDisY / mResistance));
+            if (dragIndex < 0) dragIndex = 0;
+            dy = (float) (dy * dragIndex);
+            mMovedDisY += dy;
+            mHeaderView.onPulling(dy, mTarget);
+            if (mMovedDisY >= mRefreshDis && mHeaderView.getState() != QLoadView.STATE.REFRESH
+                    && mHeaderView.getState() != QLoadView.STATE.PULL) {
+                mHeaderView.setState(QLoadView.STATE.PULL);
+            }
+        } else if (!canTargetScrollUp() && dy < 0) {
+            mHeaderPulling = true;
+            mMovedDisY += dy;
+            mHeaderView.onPulling(dy, mTarget);
+            if (mMovedDisY < 0) mMovedDisY = 0;
+            if (mMovedDisY < mRefreshDis && mHeaderView.getState() != QLoadView.STATE.REFRESH
+                    && mHeaderView.getState() != QLoadView.STATE.START) {
+                mHeaderView.setState(QLoadView.STATE.START);
+            }
+            if (mHeaderView.canTargetScroll()) {
+                mHeaderPulling = false;
             }
         }
-
-        if (dy < 0) {
-            params.height += dy;
-            if (params.height < 0) {
-                params.height = 0;
-                syncLoadViewState(mHeaderView, QLoadView.STATE_NORMAL);
-                mAction = false;
-            } else if (params.height < mRefreshHeight) {
-                syncLoadViewState(mHeaderView, QLoadView.STATE_NORMAL);
-            }
-        }
-        mHeaderView.setLayoutParams(params);
-        handleTargetHeight(params.height);
     }
 
     private void handleFooterScroll(float dy) {
-        LayoutParams params = (LayoutParams) mFooterView.getLayoutParams();
         if (dy < 0 && !canTargetScrollDown()) {
-            if (mLoading) {
-                params.height -= dy;
-                if (params.height > mFinalHeight) params.height = mFinalHeight;
-            } else {
-                mDragIndex = Math.exp(-(params.height / mRatio));
-                if (mDragIndex < 0) mDragIndex = 0;
-                params.height -= dy * mDragIndex;
-                if (params.height > mRefreshHeight) {
-                    syncLoadViewState(mFooterView, QLoadView.STATE_PULLING);
-                }
+            dy = Math.abs(dy);
+            mFooterPulling = true;
+            double dragIndex = Math.exp(-(mMovedDisY / mResistance));
+            if (dragIndex < 0) dragIndex = 0;
+            dy = (float) (dy * dragIndex);
+            mMovedDisY += dy;
+            mFooterView.onPulling(dy, mTarget);
+            if (mMovedDisY >= mRefreshDis && mFooterView.getState() != QLoadView.STATE.REFRESH
+                    && mFooterView.getState() != QLoadView.STATE.PULL) {
+                mFooterView.setState(QLoadView.STATE.PULL);
+            }
+        } else if (dy > 0 && !canTargetScrollDown()) {
+            mFooterPulling = true;
+            mFooterView.onPulling(-dy, mTarget);
+            mMovedDisY -= dy;
+            if (mMovedDisY < 0) mMovedDisY = 0;
+            if (mMovedDisY < mRefreshDis && mFooterView.getState() != QLoadView.STATE.REFRESH
+                    && mFooterView.getState() != QLoadView.STATE.START) {
+                mFooterView.setState(QLoadView.STATE.START);
+            }
+            if (mFooterView.canTargetScroll()) {
+                mFooterPulling = false;
             }
         }
-
-        if (dy > 0) {
-            params.height -= dy;
-            if (params.height < 0) {
-                params.height = 0;
-                syncLoadViewState(mFooterView, QLoadView.STATE_NORMAL);
-                mAction = false;
-            } else if (params.height < mRefreshHeight) {
-                syncLoadViewState(mFooterView, QLoadView.STATE_NORMAL);
-            }
-        }
-        mFooterView.setLayoutParams(params);
-        handleTargetHeight(-params.height);
-    }
-
-    private void syncLoadViewState(QLoadView view, int state) {
-        if ((mRefreshing && view.equals(mHeaderView))
-                || (mLoading && view.equals(mFooterView))) {
-            view.setRefreshing();
-        } else if (state == QLoadView.STATE_NORMAL) {
-            view.setNormal();
-        } else if (state == QLoadView.STATE_PULLING) {
-            view.setPulling();
-        } else if (state == QLoadView.STATE_REFRESH) {
-            view.setRefreshing();
-            if (view.equals(mHeaderView)) {
-                mRefreshing = true;
-                if (mHandler != null)
-                    mHandler.onRefresh(this);
-            } else if (view.equals(mFooterView)) {
-                mLoading = true;
-                if (mHandler != null)
-                    mHandler.onLoadMore(this);
-            }
-        }
-    }
-
-    private void handleTargetHeight(int height) {
-        if (mStyle == STYLE_CLASSIC)
-            mTarget.setTranslationY(height);
     }
 
 
@@ -346,62 +278,26 @@ public class QRefreshLayout extends FrameLayout {
         mHandler = handler;
     }
 
-    public void refreshBegin() {
-        startPullAnime(mHeaderView, mFinalHeight, null);
-        syncLoadViewState(mHeaderView, QLoadView.STATE_REFRESH);
-    }
-
     public void refreshComplete() {
-        mRefreshing = false;
-        mHeaderView.setComplete();
-        startPullAnime(mHeaderView, 0, new AnimeListener(mHeaderView));
+        mHeaderView.setState(QLoadView.STATE.COMPLETE);
+        mHeaderView.onPrepare(mTarget);
     }
 
-    public void LoadMoreComplete() {
-        mLoading = false;
-        mFooterView.setComplete();
-        startPullAnime(mFooterView, 0, new AnimeListener(mFooterView));
-        handleTargetBottom();
+    public void loadMoreComplete() {
+        mFooterView.setState(QLoadView.STATE.COMPLETE);
+        mFooterView.onPrepare(mTarget);
+    }
+
+    /**
+     * @param resistance range 0 ~ 1f
+     */
+    public void setResistance(@FloatRange(from = 0f, to = 1f) float resistance) {
+        if (resistance >= 0 && resistance <= 1f)
+            mResistance = 1000f - 1000f * resistance;
     }
 
     public void setLoadMoreEnable(boolean enable) {
         mLoadMoreEnable = enable;
     }
 
-    /**
-     * @param style Use one of {@link #STYLE_CLASSIC},{@link #STYLE_GOOGLE}
-     */
-    public void setRefreshStyle(int style) {
-        if (style != STYLE_CLASSIC && style != STYLE_GOOGLE)
-            throw new IllegalStateException("not support style");
-        mStyle = style;
-    }
-
-    private class AnimeListener extends AnimatorListenerAdapter {
-        private QLoadView mView;
-
-        public AnimeListener(QLoadView view) {
-            mView = view;
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-            if (mView != null) mView.setNormal();
-        }
-    }
-
-    private void handleTargetBottom() {
-        mTarget.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mTarget instanceof AbsListView) {
-                    ((AbsListView) mTarget).setSelection(((AbsListView) mTarget).getAdapter().getCount() - 1);
-                } else if (mTarget instanceof RecyclerView) {
-                    ((RecyclerView) mTarget).scrollToPosition(((RecyclerView) mTarget).getAdapter().getItemCount() - 1);
-                } else if (mTarget instanceof ScrollView) {
-                    ((ScrollView) mTarget).fullScroll(View.FOCUS_DOWN);
-                }
-            }
-        });
-    }
 }

@@ -1,11 +1,11 @@
-package q.rorbin.qrefreshlayout;
+package q.rorbin.qrefreshlayout.util;
 
 import android.content.Context;
 
 /**
  * @author chqiu
  */
-public class QRefreshUtil {
+public class RefreshUtil {
 
     public static int dp2px(Context context,float dpValue) {
         final float scale = context.getResources().getDisplayMetrics().density;

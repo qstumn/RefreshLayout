@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">QRefreshLayout</string>
-    <integer name="style_classic">2</integer>
-    <integer name="style_google">3</integer>
     <string name="loading_tips">内容加载中...</string>
     <string name="normal_tips">下拉刷新...</string>
     <string name="pulling_tips">松开刷新...</string>
