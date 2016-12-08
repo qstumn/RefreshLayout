@@ -2,21 +2,16 @@
 一个上拉刷新下拉加载更多的Android自定义布局
 
 ##Change Log
-    v1.1.3
-    1. 新增了google抽屉式刷新加载风格
-
-    v1.1.1
-    1. 修复了内部为RecyclerView时，上拉加载会滚动到底部的BUG
-
-    v1.1.0
-    1. 修复了某些情况下无法触发下拉刷新的BUG
     
 
-
+    v1.2.0
+    1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
+    2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
+    
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 ##how to use:
 ###1. gradle
-    compile 'q.rorbin:QRefreshLayout:1.1.3'  
+    compile 'q.rorbin:QRefreshLayout:1.2.0'  
 
 ###2. xml
 
@@ -56,22 +51,24 @@
             }
         });
 
-  如果你想自定义自己的头部或者尾部的View，只需要将你的View继承自QLoadView即可
+  如果你想自定义头部或者尾部的View，只需要将你的View继承自QLoadView即可
   
-  `public class HeaderView extends QLoadView`
+  `public class CustomView extends QLoadView`
   
    然后在设置进布局
   
-  `mRefreshLayout.setHeaderView(new HeaderView());`
- 
+  `mRefreshLayout.setHeaderView(new CustomView());`
+  `mRefreshLayout.setFooterView(new CustomView());`
+  
+   QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MateriaBlackHeaderView(MateriaBlackFooterView)，QRefreshLayout默认设置为HeaderView
  
 ###4. 属性说明
  
  xml | code | 说明
  --- | --- | ---
- app:refreshStyle | setRefreshStyle | 设置刷新风格
-
-
+ app:resistance | setResistance | 设置下拉阻力(范围0f~1f)
+ 
+ 
 #LICENSE
 ```
 Copyright 2016, RorbinQiu
