@@ -28,17 +28,17 @@
             android:layout_height="match_parent"/>
             
     </q.rorbin.qrefreshlayout.QRefreshLayout>
-    ```
+```
 
 ###3. code
   
    如果需要上拉加载更多功能，请调用以下方法
-  ```
+```
   mRefreshLayout.setLoadMoreEnable(true);
 ```
 
    设置监听 
-  ```
+```
     mRefreshLayout.setRefreshHandler(new RefreshHandler() {
     
             @Override
