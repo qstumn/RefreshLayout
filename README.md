@@ -8,7 +8,7 @@
     2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
 ```
     
-![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true) ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
+![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
 
 
 ##how to use:
