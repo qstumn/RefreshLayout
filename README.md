@@ -3,9 +3,15 @@
 
 ##Change Log
  ```
-    v1.2.0
-    1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
-    2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
+v1.2.1
+1、修复下拉拖动时会错误的触发TargetView点击事件的BUG
+2、修复快速点击TargetView会导致TargetView的Selector无法正常显示的BUG
+3、修复上拉加载更多结束后偶尔会导致TargetView无法滑动的BUG
+4、修复了TargetView为TextView时无法触发下拉刷新的BUG
+
+v1.2.0
+1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
+2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
 ```
     
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
@@ -14,7 +20,7 @@
 ##how to use:
 ###1. gradle
 ```
-    compile 'q.rorbin:QRefreshLayout:1.2.0'  
+    compile 'q.rorbin:QRefreshLayout:1.2.1'  
 ```
 ###2. xml
 ```
