@@ -3,13 +3,17 @@ package q.rorbin.qrefreshlayout;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Build;
+import android.os.SystemClock;
 import android.support.annotation.FloatRange;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.FrameLayout;
 
@@ -20,6 +24,10 @@ import q.rorbin.qrefreshlayout.widget.classics.HeaderView;
 import q.rorbin.qrefreshlayout.widget.material.MaterialBlackFooterView;
 import q.rorbin.qrefreshlayout.widget.material.MaterialBlackHeaderView;
 import q.rorbin.qrefreshlayout.widget.material.MaterialHeaderView;
+
+import static android.R.attr.enabled;
+import static android.net.wifi.WifiConfiguration.Status.DISABLED;
+import static android.net.wifi.WifiConfiguration.Status.ENABLED;
 
 /**
  * @author chqiu
@@ -38,8 +46,10 @@ public class QRefreshLayout extends FrameLayout {
     private int mMovedDisY;
     private float mRefreshDis;
     private int mMode;
-    private final int MODE_REFRESH = 1;
-    private final int MODE_LOADMORE = 2;
+    public final static int MODE_REFRESH = 1;
+    public final static int MODE_LOADMORE = 2;
+
+    private int mTouchSlop;
 
     public QRefreshLayout(Context context) {
         this(context, null);
@@ -59,6 +69,7 @@ public class QRefreshLayout extends FrameLayout {
         float resistance = typedArray.getFloat(R.styleable.QRefreshLayout_resistance, 0.6f);
         setResistance(resistance);
         typedArray.recycle();
+        mTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     @Override
@@ -68,6 +79,10 @@ public class QRefreshLayout extends FrameLayout {
             throw new IllegalStateException("QRefreshLayout can only have one child");
         }
         mTarget = getChildAt(0);
+        ViewGroup.LayoutParams params = mTarget.getLayoutParams();
+        params.width = LayoutParams.MATCH_PARENT;
+        params.height = LayoutParams.MATCH_PARENT;
+        mTarget.setLayoutParams(params);
         if (mHeaderView == null) {
             setHeaderView(new HeaderView(getContext()));
         }
@@ -100,6 +115,7 @@ public class QRefreshLayout extends FrameLayout {
             case MotionEvent.ACTION_DOWN: {
                 mTouchY = event.getY();
                 mMovedDisY = 0;
+                mTarget.setClickable(true);
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
@@ -112,26 +128,39 @@ public class QRefreshLayout extends FrameLayout {
                     mMode = MODE_LOADMORE;
                 }
                 handleScroll(dy);
-                if (mMode == MODE_REFRESH && mHeaderPulling) {
-                    return true;
-                } else if (mMode == MODE_LOADMORE && mFooterPulling) {
-                    return true;
+                if ((mMode == MODE_REFRESH && mHeaderPulling) || (mMode == MODE_LOADMORE && mFooterPulling)) {
+                    if (Math.abs(dy) > mTouchSlop) {
+                        return true;
+                    }
+                    break;
                 }
-                break;
             }
             case MotionEvent.ACTION_UP: {
-                onPointerUp();
+                float slop = mTouchSlop / 2f;
+                if (mMovedDisY > (slop > 0 ? slop : mTouchSlop)) {
+                    onPointerUp();
+                    cancelPressed(mTarget, event);
+                    return true;
+                }
                 break;
             }
         }
         return super.dispatchTouchEvent(event);
     }
 
+    private void cancelPressed(View view, MotionEvent event) {
+        MotionEvent obtain = MotionEvent.obtain(event);
+        obtain.setAction(MotionEvent.ACTION_CANCEL);
+        view.onTouchEvent(obtain);
+    }
+
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mRefreshDis = h / 6;
     }
+
 
     private void onPointerUp() {
         if (mMode == MODE_REFRESH) {
@@ -204,9 +233,9 @@ public class QRefreshLayout extends FrameLayout {
                     && mHeaderView.getState() != QLoadView.STATE.START) {
                 mHeaderView.setState(QLoadView.STATE.START);
             }
-            if (mHeaderView.canTargetScroll()) {
-                mHeaderPulling = false;
-            }
+        }
+        if (mHeaderView.canTargetScroll()) {
+            mHeaderPulling = false;
         }
     }
 
@@ -232,9 +261,9 @@ public class QRefreshLayout extends FrameLayout {
                     && mFooterView.getState() != QLoadView.STATE.START) {
                 mFooterView.setState(QLoadView.STATE.START);
             }
-            if (mFooterView.canTargetScroll()) {
-                mFooterPulling = false;
-            }
+        }
+        if (mFooterView.canTargetScroll()) {
+            mFooterPulling = false;
         }
     }
 
@@ -252,7 +281,7 @@ public class QRefreshLayout extends FrameLayout {
                 return ViewCompat.canScrollVertically(mTarget, -1) || mTarget.getScrollY() > 0;
             }
         } else {
-            return ViewCompat.canScrollVertically(mTarget, -1);
+            return mTarget.canScrollVertically(-1);
         }
     }
 
@@ -270,7 +299,7 @@ public class QRefreshLayout extends FrameLayout {
                 return ViewCompat.canScrollVertically(mTarget, 1) || mTarget.getScrollY() > 0;
             }
         } else {
-            return ViewCompat.canScrollVertically(mTarget, 1);
+            return mTarget.canScrollVertically(1);
         }
     }
 
