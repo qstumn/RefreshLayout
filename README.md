@@ -1,5 +1,5 @@
 # QRefreshLayout
-一个上拉刷新下拉加载更多的Android自定义布局
+一个下拉刷新上拉加载更多的Android自定义布局
 
 ##Change Log
  ```
