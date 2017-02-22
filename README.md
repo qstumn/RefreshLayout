@@ -19,7 +19,7 @@ v1.2.0
 
 ##how to use:
 ###1. gradle
-```
+```groovy
     compile 'q.rorbin:QRefreshLayout:1.2.1'  
 ```
 ###2. xml
