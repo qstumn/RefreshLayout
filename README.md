@@ -23,7 +23,7 @@ v1.2.0
     compile 'q.rorbin:QRefreshLayout:1.2.1'  
 ```
 ###2. xml
-```
+```xml
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
         android:layout_width="match_parent"
@@ -40,12 +40,12 @@ v1.2.0
 ###3. code
   
    如果需要上拉加载更多功能，请调用以下方法
-```
+```java
   mRefreshLayout.setLoadMoreEnable(true);
 ```
 
    设置监听 
-```
+```java
     mRefreshLayout.setRefreshHandler(new RefreshHandler() {
     
             @Override
@@ -63,13 +63,13 @@ v1.2.0
 ```
   如果你想自定义头部或者尾部的View，只需要将你的View继承自QLoadView即可
   
-```
+```java
   public class CustomView extends QLoadView
 ```
   
    然后再设置进布局
   
-```
+```java
   mRefreshLayout.setHeaderView(new CustomView());
   mRefreshLayout.setFooterView(new CustomView());
 ```
