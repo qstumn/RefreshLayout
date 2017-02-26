@@ -11,7 +11,7 @@ v1.2.1
 
 v1.2.0
 1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
-2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MateriaBlackHeaderView(FooterView)
+2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MaterialBlackHeaderView(FooterView)
 ```
     
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
@@ -74,7 +74,7 @@ v1.2.0
   mRefreshLayout.setFooterView(new CustomView());
 ```
   
-   QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MateriaBlackHeaderView(MateriaBlackFooterView)，QRefreshLayout默认设置为HeaderView
+   QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MaterialBlackHeaderView(MaterialBlackFooterView)，QRefreshLayout默认设置为HeaderView
  
 ###4. 属性说明
  
