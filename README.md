@@ -1,28 +1,16 @@
 # QRefreshLayout
 一个下拉刷新上拉加载更多的Android自定义布局
-
-##Change Log
- ```
-v1.2.1
-1、修复下拉拖动时会错误的触发TargetView点击事件的BUG
-2、修复快速点击TargetView会导致TargetView的Selector无法正常显示的BUG
-3、修复上拉加载更多结束后偶尔会导致TargetView无法滑动的BUG
-4、修复了TargetView为TextView时无法触发下拉刷新的BUG
-
-v1.2.0
-1、对QLoadView代码进行重构以支持更丰富的下拉效果，不再支持1.1.x及以下版本的QLoadView及自定义的子类
-2、新增加了两个QLoadView实现类：MaterialHeaderView(FooterView)、MaterialBlackHeaderView(FooterView)
-```
     
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
 
 
-##how to use:
-###1. gradle
+## how to use:
+### 1. gradle
 ```groovy
-    compile 'q.rorbin:QRefreshLayout:1.2.1'  
+    compile 'q.rorbin:QRefreshLayout:VERSION_CODE'  
 ```
-###2. xml
+VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
+### 2. xml
 ```xml
     <q.rorbin.qrefreshlayout.QRefreshLayout
         android:id="@+id/refreshlayout"
@@ -37,7 +25,7 @@ v1.2.0
     </q.rorbin.qrefreshlayout.QRefreshLayout>
 ```
 
-###3. code
+### 3. code
   
    如果需要上拉加载更多功能，请调用以下方法
 ```java
@@ -76,14 +64,14 @@ v1.2.0
   
    QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MaterialBlackHeaderView(MaterialBlackFooterView)，QRefreshLayout默认设置为HeaderView
  
-###4. 属性说明
+### 4. 属性说明
  
  xml | code | 说明
  --- | --- | ---
  app:resistance | setResistance | 设置下拉阻力(范围0f~1f)
  
  
-#LICENSE
+# LICENSE
 ```
 Copyright 2016, RorbinQiu
 
