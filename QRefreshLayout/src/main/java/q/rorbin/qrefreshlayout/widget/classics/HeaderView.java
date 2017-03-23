@@ -38,7 +38,6 @@ public class HeaderView extends QLoadView {
     protected ImageView mIvIcon;
     protected TextView mTvTips;
     protected ProgressBar mProgressBar;
-    protected int mAnimeDuration = 300;
     protected final int mMargin = RefreshUtil.dp2px(getContext(), 15);
     protected ViewGroup mContent;
     int i = 0;
@@ -100,6 +99,7 @@ public class HeaderView extends QLoadView {
             mProgressBar.setVisibility(View.GONE);
             mTvTips.setText(getStateTips(COMPLETE));
             mState = COMPLETE;
+            mIvIcon.setRotation(0);
         }
     }
 

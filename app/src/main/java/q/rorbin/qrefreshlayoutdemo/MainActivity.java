@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
     public void getData() {
         mDatas = new LinkedList<>();
         Collections.addAll(mDatas, "第1条数据", "第2条数据", "第3条数据",
-                "第4条数据","第5条数据","第6条数据","第7条数据","第8条数据","第9条数据","第10条数据");
+                "第4条数据","第5条数据","第6条数据","第7条数据","第8条数据","第9条数据","第10条数据"
+        ,"第7条数据","第8条数据","第9条数据","第10条数据");
     }
 }

@@ -2,32 +2,18 @@ package q.rorbin.qrefreshlayout;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Build;
-import android.os.SystemClock;
-import android.support.annotation.FloatRange;
-import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 
 import q.rorbin.qrefreshlayout.listener.RefreshHandler;
 import q.rorbin.qrefreshlayout.widget.QLoadView;
 import q.rorbin.qrefreshlayout.widget.classics.FooterView;
 import q.rorbin.qrefreshlayout.widget.classics.HeaderView;
-import q.rorbin.qrefreshlayout.widget.material.MaterialBlackFooterView;
-import q.rorbin.qrefreshlayout.widget.material.MaterialBlackHeaderView;
-import q.rorbin.qrefreshlayout.widget.material.MaterialHeaderView;
-
-import static android.R.attr.enabled;
-import static android.net.wifi.WifiConfiguration.Status.DISABLED;
-import static android.net.wifi.WifiConfiguration.Status.ENABLED;
 
 /**
  * @author chqiu
@@ -111,7 +97,7 @@ public class QRefreshLayout extends FrameLayout {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        switch (MotionEventCompat.getActionMasked(event)) {
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN: {
                 mTouchY = event.getY();
                 mMovedDisY = 0;
@@ -129,14 +115,13 @@ public class QRefreshLayout extends FrameLayout {
                 }
                 handleScroll(dy);
                 if ((mMode == MODE_REFRESH && mHeaderPulling) || (mMode == MODE_LOADMORE && mFooterPulling)) {
-                    if (Math.abs(dy) > mTouchSlop) {
-                        return true;
-                    }
-                    break;
+                    return true;
                 }
+                break;
             }
             case MotionEvent.ACTION_UP: {
                 float slop = mTouchSlop / 2f;
+                //if mMovedDisY < mTouchSlop this event is targetView do onClick
                 if (mMovedDisY > (slop > 0 ? slop : mTouchSlop)) {
                     onPointerUp();
                     cancelPressed(mTarget, event);
@@ -271,36 +256,13 @@ public class QRefreshLayout extends FrameLayout {
     private boolean canTargetScrollUp() {
         if (mTarget == null)
             return false;
-        if (Build.VERSION.SDK_INT < 14) {
-            if (mTarget instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) mTarget;
-                return absListView.getChildCount() > 0
-                        && (absListView.getFirstVisiblePosition() > 0 || absListView.getChildAt(0)
-                        .getTop() < absListView.getPaddingTop());
-            } else {
-                return ViewCompat.canScrollVertically(mTarget, -1) || mTarget.getScrollY() > 0;
-            }
-        } else {
-            return mTarget.canScrollVertically(-1);
-        }
+        return mTarget.canScrollVertically(-1) || mTarget.getScrollY() > 0;
     }
 
     private boolean canTargetScrollDown() {
         if (mTarget == null)
             return false;
-        if (Build.VERSION.SDK_INT < 14) {
-            if (mTarget instanceof AbsListView) {
-                final AbsListView absListView = (AbsListView) mTarget;
-                return absListView.getChildCount() > 0
-                        && (absListView.getLastVisiblePosition() == absListView.getChildCount() - 1
-                        || absListView.getChildAt(absListView.getChildCount() - 1)
-                        .getBottom() <= absListView.getPaddingBottom());
-            } else {
-                return ViewCompat.canScrollVertically(mTarget, 1) || mTarget.getScrollY() > 0;
-            }
-        } else {
-            return mTarget.canScrollVertically(1);
-        }
+        return mTarget.canScrollVertically(1) || mTarget.getScrollY() > 0;
     }
 
     public void setRefreshHandler(RefreshHandler handler) {
@@ -320,7 +282,7 @@ public class QRefreshLayout extends FrameLayout {
     /**
      * @param resistance range 0 ~ 1f
      */
-    public void setResistance(@FloatRange(from = 0f, to = 1f) float resistance) {
+    public void setResistance(float resistance) {
         if (resistance >= 0 && resistance <= 1f)
             mResistance = 1000f - 1000f * resistance;
     }
