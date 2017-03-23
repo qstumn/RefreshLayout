@@ -23,7 +23,7 @@ publish {
     userOrg = 'qstumn'
     groupId = 'q.rorbin'
     artifactId = 'QRefreshLayout'
-    publishVersion = '1.2.1'
+    publishVersion = '1.2.2'
     desc = 'this is a custom layout with refresh and loadmore function for android'
     website = 'https://github.com/qstumn/QRefreshLayout'
 }
