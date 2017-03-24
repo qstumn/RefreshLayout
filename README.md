@@ -70,6 +70,8 @@ VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
  --- | --- | ---
  app:resistance | setResistance | 设置下拉阻力(范围0f~1f)
  
+### 5.更新计划
+ 增加NestedScrolling特性支持
  
 # LICENSE
 ```
