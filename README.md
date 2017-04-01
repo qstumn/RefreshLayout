@@ -1,5 +1,5 @@
 # QRefreshLayout
-一个下拉刷新上拉加载更多的Android自定义布局
+为任意View添加下拉刷新上拉加载更多的功能
 
 ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
 
@@ -7,7 +7,7 @@
 ## how to use:
 ### 1. gradle
 ```groovy
-    compile 'q.rorbin:QRefreshLayout:VERSION_CODE'  
+    compile 'q.rorbin:QRefreshLayout:1.2.2'  
 ```
 VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
 ### 2. xml
