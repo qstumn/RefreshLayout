@@ -7,7 +7,7 @@
 ## how to use:
 ### 1. gradle
 ```groovy
-    compile 'q.rorbin:QRefreshLayout:1.2.2'  
+    compile 'q.rorbin:QRefreshLayout:1.2.4'  
 ```
 VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
 ### 2. xml
@@ -49,10 +49,11 @@ VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
             }
         });
 ```
-  如果你想自定义头部或者尾部的View，只需要将你的View继承自QLoadView即可
-  
+  如果你想自定义头部或者尾部的View，只需要将你的View继承自QLoadView或
+  实现ILoadView接口
 ```java
   public class CustomView extends QLoadView
+  public class CustomView implements ILoadView
 ```
   
    然后再设置进布局
@@ -62,16 +63,13 @@ VERSION_CODE [here](https://github.com/qstumn/RefreshLayout/releases)
   mRefreshLayout.setFooterView(new CustomView());
 ```
   
-   QLoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MaterialBlackHeaderView(MaterialBlackFooterView)，QRefreshLayout默认设置为HeaderView
+   LoadView已有三种实现类供您选择使用，分别为：HeaderView(FooterView)、MaterialHeaderView(MaterialFooterView)、MaterialBlackHeaderView(MaterialBlackFooterView)，QRefreshLayout默认设置为HeaderView
  
 ### 4. 属性说明
  
  xml | code | 说明
  --- | --- | ---
  app:resistance | setResistance | 设置下拉阻力(范围0f~1f)
- 
-### 5.更新计划
- 增加NestedScrolling特性支持
  
 # LICENSE
 ```
