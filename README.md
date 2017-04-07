@@ -1,7 +1,7 @@
 # QRefreshLayout
 为任意View添加下拉刷新上拉加载更多的功能，支持NestedScrolling特性
 
-![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)       ![](https://github.com/qstumn/QRefreshLayout/blob/master/demo2.gif?raw=true)
+![](https://github.com/qstumn/QRefreshLayout/blob/master/demo.gif?raw=true)
 
 
 ## how to use:
