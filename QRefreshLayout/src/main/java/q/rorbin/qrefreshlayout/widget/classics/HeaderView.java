@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +19,10 @@ import q.rorbin.qrefreshlayout.R;
 import q.rorbin.qrefreshlayout.util.RefreshAnimeUtil;
 import q.rorbin.qrefreshlayout.widget.QLoadView;
 
-import static android.content.ContentValues.TAG;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.COMPLETE;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.PULL;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.REFRESH;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.START;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.COMPLETE;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.PULL;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.REFRESH;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.START;
 
 
 /**
@@ -40,7 +38,7 @@ public class HeaderView extends QLoadView {
     protected ProgressBar mProgressBar;
     protected final int mMargin = RefreshUtil.dp2px(getContext(), 15);
     protected ViewGroup mContent;
-    int i = 0;
+//    int i = 0;
 
     public HeaderView(Context context) {
         super(context);
@@ -57,7 +55,7 @@ public class HeaderView extends QLoadView {
 
     @Override
     public boolean canTargetScroll() {
-        return getLayoutParams().height <= 0;
+        return getHeight() <= 0;
     }
 
     private void setRefreshState() {
@@ -152,7 +150,7 @@ public class HeaderView extends QLoadView {
                 params.height += 30;
                 if (params.height > mMeasuredHeight) params.height = mMeasuredHeight;
             } else {
-                i += dis;
+//                i += dis;
                 params.height += dis;
             }
         } else if (dis < 0) {

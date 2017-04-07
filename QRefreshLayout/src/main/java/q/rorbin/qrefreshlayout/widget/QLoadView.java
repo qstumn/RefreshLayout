@@ -11,29 +11,13 @@ import q.rorbin.qrefreshlayout.QRefreshLayout;
 /**
  * @author chqiu
  */
-public abstract class QLoadView extends FrameLayout {
+public abstract class QLoadView extends FrameLayout implements ILoadView {
 
     public QLoadView(Context context) {
         super(context);
     }
 
-    public enum STATE {
-        REFRESH, START, PULL, COMPLETE
+    public View getView() {
+        return this;
     }
-
-    public abstract STATE getState();
-
-    public abstract boolean canTargetScroll();
-
-    public abstract void onRefreshBegin(View targetView);
-
-    public abstract void setState(STATE state);
-
-    public abstract void onPrepare(View targetView);
-
-    public abstract void onPulling(float dis, View targetView);
-
-    public abstract void addToRefreshLayout(QRefreshLayout layout);
-
-
 }

@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
         mRefreshLayout = (QRefreshLayout) findViewById(R.id.refreshlayout);
         //设置上拉加载更多可用
         mRefreshLayout.setLoadMoreEnable(true);
-        mRefreshLayout.setHeaderView(new HeaderView(this));
-        mRefreshLayout.setFooterView(new FooterView(this));
         mAdapter = new ArrayAdapter<>(this, R.layout.item_textview,
                 R.id.textview, mDatas);
         mListView.setAdapter(mAdapter);
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     public void getData() {
         mDatas = new LinkedList<>();
         Collections.addAll(mDatas, "第1条数据", "第2条数据", "第3条数据",
-                "第4条数据","第5条数据","第6条数据","第7条数据","第8条数据","第9条数据","第10条数据"
-        ,"第7条数据","第8条数据","第9条数据","第10条数据");
+                "第4条数据", "第5条数据", "第6条数据", "第7条数据", "第8条数据", "第9条数据", "第10条数据"
+                , "第11条数据", "第12条数据", "第13条数据", "第14条数据");
     }
 }

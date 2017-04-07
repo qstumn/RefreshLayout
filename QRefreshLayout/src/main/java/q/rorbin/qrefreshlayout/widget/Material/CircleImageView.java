@@ -8,14 +8,15 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.animation.Animation;
-import android.widget.ImageView;
 
 /**
  * Created by chqiu on 2016/9/28.
  */
 
-public class CircleImageView extends ImageView {
+public class CircleImageView extends AppCompatImageView {
 
     private static final int KEY_SHADOW_COLOR = 0x1E000000;
     private static final int FILL_SHADOW_COLOR = 0x3D000000;
@@ -40,11 +41,11 @@ public class CircleImageView extends ImageView {
         ShapeDrawable circle;
         if (elevationSupported()) {
             circle = new ShapeDrawable(new OvalShape());
-            this.setElevation(SHADOW_ELEVATION * density);
+            ViewCompat.setElevation(this, SHADOW_ELEVATION * density);
         } else {
             OvalShape oval = new CircleImageView.OvalShadow(mShadowRadius, diameter);
             circle = new ShapeDrawable(oval);
-            this.setLayerType(LAYER_TYPE_SOFTWARE, circle.getPaint());
+            ViewCompat.setLayerType(this, ViewCompat.LAYER_TYPE_SOFTWARE, circle.getPaint());
             circle.getPaint().setShadowLayer(mShadowRadius, shadowXOffset, shadowYOffset,
                     KEY_SHADOW_COLOR);
             final int padding = mShadowRadius;

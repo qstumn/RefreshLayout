@@ -1,1 +1,1 @@
-include ':app',':QRefreshLayout'
+include ':app', ':qrefreshlayout'

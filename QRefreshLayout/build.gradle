@@ -17,18 +17,22 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 publish {
     userOrg = 'qstumn'
     groupId = 'q.rorbin'
     artifactId = 'QRefreshLayout'
-    publishVersion = '1.2.2'
+    publishVersion = '1.2.4'
     desc = 'this is a custom layout with refresh and loadmore function for android'
     website = 'https://github.com/qstumn/QRefreshLayout'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:25.2.0'
     testCompile 'junit:junit:4.12'
 }

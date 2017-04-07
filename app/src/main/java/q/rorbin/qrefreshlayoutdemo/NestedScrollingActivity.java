@@ -16,8 +16,9 @@ import java.util.LinkedList;
 
 import q.rorbin.qrefreshlayout.QRefreshLayout;
 import q.rorbin.qrefreshlayout.listener.RefreshHandler;
+import q.rorbin.qrefreshlayout.widget.material.MaterialBlackHeaderView;
 
-public class RecyclerViewActivity extends AppCompatActivity {
+public class NestedScrollingActivity extends AppCompatActivity {
     private QRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private LinkedList<String> mDatas;
@@ -28,10 +29,11 @@ public class RecyclerViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recycler_view);
         getData();
-        refreshLayout = (QRefreshLayout) findViewById(R.id.refreshlayout);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new RecyclerAdapter());
+        refreshLayout = (QRefreshLayout) findViewById(R.id.refreshlayout);
+        refreshLayout.setHeaderView(new MaterialBlackHeaderView(this));
         refreshLayout.setLoadMoreEnable(true);
         refreshLayout.setRefreshHandler(new RefreshHandler() {
             @Override
@@ -63,7 +65,9 @@ public class RecyclerViewActivity extends AppCompatActivity {
     public void getData() {
         mDatas = new LinkedList<>();
         Collections.addAll(mDatas, "第1条数据", "第2条数据", "第3条数据",
-                "第4条数据", "第7条数据", "第8条数据", "第9条数据", "第10条数据");
+                "第4条数据", "第7条数据", "第8条数据", "第9条数据", "第10条数据", "第11条数据",
+                "第12条数据", "第13条数据", "第14条数据", "第15条数据", "第16条数据", "第17条数据", "第18条数据"
+                , "第19条数据", "第20条数据");
     }
 
     class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Holder> {
@@ -81,8 +85,16 @@ public class RecyclerViewActivity extends AppCompatActivity {
             holder.view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(holder.view.getContext(),
+                    Toast.makeText(holder.view.getContext(), "点击 : " +
                             mDatas.get(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                }
+            });
+            holder.view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(holder.view.getContext(), "长按 : " +
+                            mDatas.get(holder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                    return true;
                 }
             });
         }

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
@@ -12,11 +11,9 @@ import q.rorbin.qrefreshlayout.QRefreshLayout;
 import q.rorbin.qrefreshlayout.util.RefreshUtil;
 import q.rorbin.qrefreshlayout.util.RefreshAnimeUtil;
 import q.rorbin.qrefreshlayout.widget.QLoadView;
-import q.rorbin.qrefreshlayout.widget.material.CircleImageView;
-import q.rorbin.qrefreshlayout.widget.material.MaterialProgressDrawable;
 
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.REFRESH;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.START;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.REFRESH;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.START;
 
 /**
  * Created by chqiu on 2016/9/28.

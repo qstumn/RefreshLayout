@@ -9,10 +9,10 @@ import q.rorbin.qrefreshlayout.QRefreshLayout;
 import q.rorbin.qrefreshlayout.listener.TargetHandler;
 import q.rorbin.qrefreshlayout.R;
 
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.COMPLETE;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.PULL;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.REFRESH;
-import static q.rorbin.qrefreshlayout.widget.QLoadView.STATE.START;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.COMPLETE;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.PULL;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.REFRESH;
+import static q.rorbin.qrefreshlayout.widget.ILoadView.STATE.START;
 
 /**
  * LoadView默认实现
